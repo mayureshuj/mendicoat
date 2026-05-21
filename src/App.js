@@ -1,5 +1,6 @@
 // src/App.js
 import React, { useState, useEffect, useCallback } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { api } from "./utils/api";
 import LogGame   from "./components/LogGame";
 import Leaderboard from "./components/Leaderboard";
@@ -181,6 +182,7 @@ export default function App() {
           </button>
         ))}
       </nav>
+      <Analytics />
     </div>
   );
 }
