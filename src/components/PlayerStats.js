@@ -24,6 +24,7 @@ export default function PlayerStats({ stats, players, selectedPlayer, setSelecte
           {playerNames.map(name => (
             <button
               key={name}
+              type="button"
               onClick={() => setSelectedPlayer(name)}
               style={{
                 padding: "6px 14px", borderRadius: 20, whiteSpace: "nowrap",
@@ -52,7 +53,6 @@ function PlayerCard({ p, allStats }) {
   const coatColor = p.coatRate < 20 ? "var(--success)" : p.coatRate < 40 ? "var(--accent)" : "var(--danger)";
   const rank = allStats.players.findIndex(x => x.name === p.name) + 1;
 
-  // Partner stats — find pairs involving this player
   const myPairs = allStats.pairs
     .filter(pr => pr.p1 === p.name || pr.p2 === p.name)
     .map(pr => ({
@@ -65,7 +65,7 @@ function PlayerCard({ p, allStats }) {
     }))
     .sort((a, b) => a.rate - b.rate);
 
-  const luckyPartner  = myPairs[0];
+  const luckyPartner   = myPairs[0];
   const nemesisPartner = myPairs[myPairs.length - 1];
 
   return (
@@ -90,17 +90,31 @@ function PlayerCard({ p, allStats }) {
           </div>
         </div>
 
-        {/* Trend */}
-        {p.formTrend !== "stable" && (
-          <div style={{
-            marginTop: 12, fontSize: 12, padding: "6px 10px",
-            borderRadius: "var(--r)", display: "inline-block",
-            background: p.formTrend === "improving" ? "#1a2e1a" : "#2a1a1a",
-            color: p.formTrend === "improving" ? "var(--success)" : "var(--danger)"
-          }}>
-            {p.formTrend === "improving" ? "↑ Form improving (last 5 games)" : "↓ Form worsening (last 5 games)"}
-          </div>
-        )}
+        {/* Form trend + MoM delta */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 12 }}>
+          {p.formTrend !== "stable" && (
+            <div style={{
+              fontSize: 12, padding: "6px 10px",
+              borderRadius: "var(--r)", display: "inline-block",
+              background: p.formTrend === "improving" ? "#1a2e1a" : "#2a1a1a",
+              color: p.formTrend === "improving" ? "var(--success)" : "var(--danger)"
+            }}>
+              {p.formTrend === "improving" ? "↑ Form improving (last 5)" : "↓ Form worsening (last 5)"}
+            </div>
+          )}
+          {p.monthOverMonthDelta !== null && (
+            <div style={{
+              fontSize: 12, padding: "6px 10px",
+              borderRadius: "var(--r)", display: "inline-block",
+              background: p.monthOverMonthDelta <= 0 ? "#1a2e1a" : "#2a1a1a",
+              color: p.monthOverMonthDelta <= 0 ? "var(--success)" : "var(--danger)"
+            }}>
+              {p.monthOverMonthDelta <= 0
+                ? `↓ ${Math.abs(p.monthOverMonthDelta)}% vs last month`
+                : `↑ ${p.monthOverMonthDelta}% vs last month`}
+            </div>
+          )}
+        </div>
 
         {/* Recent form dots */}
         {p.recentForm.length > 0 && (
@@ -123,12 +137,15 @@ function PlayerCard({ p, allStats }) {
         )}
       </div>
 
-      {/* Core stats grid */}
+      {/* Core stats grid — 2 rows × 3 cols */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 14 }}>
         {[
-          { label: "Games",  value: p.gamesPlayed,    color: "var(--text)" },
-          { label: "Coats",  value: p.coatsReceived,  color: "var(--danger)" },
-          { label: "Rank",   value: `#${rank}`,        color: coatColor },
+          { label: "Games",    value: p.gamesPlayed,           color: "var(--text)" },
+          { label: "Coats",    value: p.coatsReceived,         color: "var(--danger)" },
+          { label: "Rank",     value: `#${rank}`,               color: coatColor },
+          { label: "Wins",     value: p.winsReceived ?? "—",   color: "var(--success)" },
+          { label: "Win %",    value: p.winRate != null ? `${p.winRate.toFixed(0)}%` : "—", color: "var(--success)" },
+          { label: "Sit-out",  value: p.sitOutCount != null ? `${p.sitOutCount}g` : "—",    color: "var(--text3)" },
         ].map(m => (
           <div key={m.label} style={{
             background: "var(--surface2)", borderRadius: "var(--r)",
@@ -142,25 +159,33 @@ function PlayerCard({ p, allStats }) {
         ))}
       </div>
 
-      {/* Streaks */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 14 }}>
+      {/* Coat streaks */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
         <StatCard label="Best clean streak" value={`${p.bestCleanStreak} games`} color="var(--success)" icon="🔥" />
-        <StatCard label="Worst coat streak" value={`${p.worstCoatStreak} games`} color="var(--danger)" icon="💀" />
+        <StatCard label="Worst coat streak" value={`${p.worstCoatStreak} games`} color="var(--danger)"  icon="💀" />
         <StatCard
           label="Current streak"
           value={p.currentStreak === 0 ? "—" : p.currentStreak > 0 ? `${p.currentStreak} clean` : `${Math.abs(p.currentStreak)} coats`}
           color={p.currentStreak >= 0 ? "var(--success)" : "var(--danger)"}
           icon="📍"
         />
+        <StatCard label="Last coated" value={p.lastCoatDate || "Never!"} color="var(--text2)" icon="📅" />
         <StatCard
-          label="Last coated"
-          value={p.lastCoatDate || "Never!"}
-          color="var(--text2)"
-          icon="📅"
+          label="Worst day"
+          value={p.worstDay ? `${p.worstDay.coats} coats` : "—"}
+          sub={p.worstDay ? `${p.worstDay.date} · ${p.worstDay.games} games` : null}
+          color="var(--danger)"
+          icon="📆"
         />
       </div>
 
-      {/* Partner stats */}
+      {/* Win streaks */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 14 }}>
+        <StatCard label="Best win streak"    value={`${p.bestWinStreak ?? 0} games`}    color="var(--info)" icon="⚡" />
+        <StatCard label="Current win streak" value={`${p.currentWinStreak ?? 0} games`} color="var(--info)" icon="🏅" />
+      </div>
+
+      {/* Partner breakdown */}
       {myPairs.length > 0 && (
         <div style={{ marginBottom: 14 }}>
           <h3 style={{ fontFamily: "var(--font-head)", fontSize: 13, letterSpacing: "0.1em",
@@ -198,7 +223,44 @@ function PlayerCard({ p, allStats }) {
         </div>
       )}
 
-      {/* Monthly stats */}
+      {/* VS Opponents */}
+      {p.opponentStats?.length > 0 && (
+        <div style={{ marginBottom: 14 }}>
+          <h3 style={{ fontFamily: "var(--font-head)", fontSize: 13, letterSpacing: "0.1em",
+            color: "var(--text2)", fontWeight: 600, marginBottom: 10 }}>
+            VS OPPONENTS
+          </h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {p.opponentStats.map(opp => {
+              const c = opp.rate < 20 ? "var(--success)" : opp.rate < 40 ? "var(--accent)" : "var(--danger)";
+              return (
+                <div key={opp.name} style={{
+                  background: "var(--surface2)", borderRadius: "var(--r)",
+                  padding: "10px 14px",
+                  display: "flex", alignItems: "center", justifyContent: "space-between"
+                }}>
+                  <div>
+                    <div style={{ fontFamily: "var(--font-head)", fontSize: 13, fontWeight: 700, color: "var(--text)" }}>
+                      {opp.name.split(" ")[0]}
+                    </div>
+                    <div style={{ fontSize: 11, color: "var(--text3)", marginTop: 2 }}>
+                      {opp.games} games facing · {opp.coats} coats received
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontFamily: "var(--font-head)", fontSize: 16, fontWeight: 800, color: c }}>
+                      {opp.rate.toFixed(1)}%
+                    </div>
+                    <div style={{ fontSize: 9, color: "var(--text3)" }}>coat rate</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Monthly trend */}
       {p.monthlyStats?.length > 0 && (
         <div>
           <h3 style={{ fontFamily: "var(--font-head)", fontSize: 13, letterSpacing: "0.1em",
@@ -236,18 +298,18 @@ function PlayerCard({ p, allStats }) {
   );
 }
 
-function StatCard({ label, value, color, icon }) {
+function StatCard({ label, value, sub, color, icon }) {
   return (
-    <div style={{
-      background: "var(--surface2)", borderRadius: "var(--r)",
-      padding: "12px 12px"
-    }}>
+    <div style={{ background: "var(--surface2)", borderRadius: "var(--r)", padding: "12px 12px" }}>
       <div style={{ fontSize: 10, color: "var(--text3)", letterSpacing: "0.05em", marginBottom: 4 }}>
         {icon} {label.toUpperCase()}
       </div>
       <div style={{ fontFamily: "var(--font-head)", fontSize: 14, fontWeight: 700, color }}>
         {value}
       </div>
+      {sub && (
+        <div style={{ fontSize: 10, color: "var(--text3)", marginTop: 3 }}>{sub}</div>
+      )}
     </div>
   );
 }

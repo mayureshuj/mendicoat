@@ -31,3 +31,4 @@ Thumbs.db
 # Google Apps Script
 .clasp.json
 appsscript.json
+.vercel
