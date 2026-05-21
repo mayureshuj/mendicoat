@@ -4,6 +4,8 @@ A mobile-first web application for tracking scores in the Indian card game **Men
 
 > **Live stack:** React PWA → Google Apps Script API → Google Sheets as database. 100% free, forever.
 
+> **Live app:** [mendicoat-premier-league.vercel.app](https://mendicoat-premier-league.vercel.app/)
+
 ---
 
 ## Table of Contents
