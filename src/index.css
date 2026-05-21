@@ -48,6 +48,8 @@ button {
   border: none;
   outline: none;
   transition: opacity .15s, transform .1s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 button:active { transform: scale(0.97); }
 

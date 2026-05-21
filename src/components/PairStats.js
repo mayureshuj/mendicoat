@@ -55,27 +55,40 @@ export default function PairStats({ stats }) {
       </div>
 
       {/* Sort toggle */}
-      <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
-        {[
-          { val: "coatRate", label: "Coat %" },
-          { val: "winRate",  label: "Win %" },
-          { val: "games",    label: "Games" },
-        ].map(s => (
-          <button
-            key={s.val}
-            onClick={() => setSort(s.val)}
-            style={{
-              padding: "6px 14px", borderRadius: 20,
-              background: sort === s.val ? "var(--accent)" : "var(--surface2)",
-              border: `1px solid ${sort === s.val ? "var(--accent)" : "var(--border)"}`,
-              color: sort === s.val ? "#0f0f0f" : "var(--text3)",
-              fontFamily: "var(--font-head)", fontSize: 11, fontWeight: 700,
-              letterSpacing: "0.05em"
-            }}
-          >
-            {s.label}
-          </button>
-        ))}
+      <div style={{ marginBottom: 14 }}>
+        <div style={{ fontSize: 10, color: "var(--text3)", letterSpacing: "0.08em",
+          fontFamily: "var(--font-head)", marginBottom: 6 }}>
+          SORT BY
+        </div>
+        <div style={{ display: "flex", gap: 6 }}>
+          {[
+            { val: "coatRate", label: "Coat %",  icon: "↑" },
+            { val: "winRate",  label: "Win %",   icon: "↓" },
+            { val: "games",    label: "Games",   icon: "↓" },
+          ].map(s => {
+            const active = sort === s.val;
+            return (
+              <button
+                key={s.val}
+                type="button"
+                onClick={() => setSort(s.val)}
+                style={{
+                  display: "flex", alignItems: "center", gap: 4,
+                  padding: "6px 12px", borderRadius: 20,
+                  background: active ? "var(--accent)" : "var(--surface2)",
+                  border: `1px solid ${active ? "var(--accent)" : "var(--border)"}`,
+                  color: active ? "#0f0f0f" : "var(--text2)",
+                  fontFamily: "var(--font-head)", fontSize: 11, fontWeight: 700,
+                  letterSpacing: "0.05em",
+                  transition: "background .15s, color .15s, border-color .15s"
+                }}
+              >
+                {s.label}
+                <span style={{ fontSize: 10, opacity: active ? 1 : 0.4 }}>{s.icon}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Pair list */}

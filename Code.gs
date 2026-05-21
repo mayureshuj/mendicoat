@@ -1,5 +1,5 @@
 // ============================================================
-//  MENDICOAT TRACKER — Google Apps Script Backend
+//  MENDICOAT PREMIER LEAGUE — Google Apps Script Backend
 //  Deploy as: Web App → Execute as Me → Anyone can access
 // ============================================================
 

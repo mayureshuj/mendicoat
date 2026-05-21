@@ -1,4 +1,4 @@
-# Mendicoat Tracker — Deployment Guide
+# Mendicoat Premier League — Deployment Guide
 
 ## What you'll set up
 | Part | Service | Cost |
@@ -14,7 +14,7 @@ Total time: ~20 minutes.
 ## Step 1 — Create the Google Sheet
 
 1. Go to [sheets.google.com](https://sheets.google.com) and create a new blank spreadsheet.
-2. Name it **Mendicoat Tracker**.
+2. Name it **Mendicoat Premier League**.
 3. Leave it empty — the script will create the sheets automatically.
 4. Copy the spreadsheet URL from your browser. You'll need it in Step 2.
 
@@ -25,11 +25,11 @@ Total time: ~20 minutes.
 1. In your Google Sheet, click **Extensions → Apps Script**.
 2. Delete all the placeholder code in the editor.
 3. Open `Code.gs` from the files you downloaded and **paste the entire contents** into the editor.
-4. Click **Save** (💾 icon), name the project **MendicoatAPI**.
+4. Click **Save** (💾 icon), name the project **MendicoatPremierLeague**.
 5. Click **Deploy → New deployment**.
 6. Click the gear icon ⚙ next to "Type" and select **Web app**.
 7. Set the following:
-   - Description: `Mendicoat API v1`
+   - Description: `Mendicoat Premier League API v1`
    - Execute as: **Me**
    - Who has access: **Anyone**
 8. Click **Deploy**.
@@ -50,7 +50,7 @@ You need [Node.js](https://nodejs.org) installed (v16+).
 
 ```bash
 # Unzip the downloaded project folder, then:
-cd mendicoat-tracker
+cd mendicoat-premier-league
 npm install
 ```
 
@@ -87,7 +87,7 @@ Open [http://localhost:3000](http://localhost:3000) — you should see the app a
    - Set up and deploy: **Y**
    - Which scope: select your account
    - Link to existing project: **N**
-   - Project name: `mendicoat-tracker`
+   - Project name: `mendicoat-premier-league`
    - Directory: `./` (press Enter)
 5. After it deploys, go to your **Vercel dashboard → Project → Settings → Environment Variables**.
 6. Add:
@@ -95,7 +95,7 @@ Open [http://localhost:3000](http://localhost:3000) — you should see the app a
    - Value: your Apps Script URL
 7. Go to **Deployments → Redeploy** to apply the env variable.
 
-Your app is now live at `https://mendicoat-tracker.vercel.app` (or similar).
+Your app is now live at `https://mendicoat-premier-league.vercel.app` (or similar).
 
 ---
 
@@ -163,7 +163,7 @@ You can open the sheet anytime to view raw data, export to Excel, or manually fi
 ## File reference
 
 ```
-mendicoat-tracker/
+mendicoat-premier-league/
 ├── Code.gs                  ← Paste into Google Apps Script
 ├── public/
 │   ├── index.html
