@@ -1,0 +1,80 @@
+/* src/index.css */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0f0f0f;
+  --surface:   #1a1a1a;
+  --surface2:  #242424;
+  --border:    #2e2e2e;
+  --border2:   #3d3d3d;
+  --text:      #f0ede8;
+  --text2:     #9a9690;
+  --text3:     #5c5a57;
+  --accent:    #e8c547;
+  --accent2:   #c9a832;
+  --danger:    #e05252;
+  --success:   #52b788;
+  --info:      #6ba3d6;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --r:         10px;
+  --r-lg:      16px;
+  --tab-h:     60px;
+}
+
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100dvh;
+  overscroll-behavior: none;
+}
+
+#root {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: opacity .15s, transform .1s;
+}
+button:active { transform: scale(0.97); }
+
+input {
+  font-family: var(--font-body);
+  font-size: 15px;
+  outline: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.fade-up  { animation: fadeUp  .3s ease both; }
+.fade-in  { animation: fadeIn  .2s ease both; }
